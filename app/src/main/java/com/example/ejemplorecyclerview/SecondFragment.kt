@@ -9,19 +9,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ejemplorecyclerview.databinding.FragmentSecondBinding
+import com.google.android.material.snackbar.Snackbar
 
-/**
- * A simple [Fragment] subclass as the second destination in the navigation.
- */
 class SecondFragment : Fragment() {
 
     private var _binding: FragmentSecondBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
-    lateinit var miRecyclerView: RecyclerView
+    private lateinit var miRecyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,8 +33,11 @@ class SecondFragment : Fragment() {
 
         miRecyclerView=binding.rvContenedores
         miRecyclerView.layoutManager=LinearLayoutManager(activity)
-        miRecyclerView.adapter=Adaptador(this)
+        miRecyclerView.adapter=Adaptador(this,(activity as MainActivity).miViewModel.listaPeliculas)
 
+        binding.fab.setOnClickListener { view ->
+            findNavController().navigate(R.id.action_SecondFragment_to_detalleFragment)
+        }
     }
 
     override fun onDestroyView() {

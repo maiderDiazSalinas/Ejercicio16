@@ -1,21 +1,29 @@
 package com.example.ejemplorecyclerview
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 
-class Adaptador(var fragmento:Fragment):RecyclerView.Adapter<Adaptador.ViewHolder>() {
+class Adaptador(var fragmento:Fragment, var lista:MutableList<Pelicula>):RecyclerView.Adapter<Adaptador.ViewHolder>() {
 
     inner class ViewHolder(v: View):RecyclerView.ViewHolder(v){
-        var tvNumero:TextView
+        var caratula:ImageView=v.findViewById(R.id.ivCaratula)
+        var titulo:TextView=v.findViewById(R.id.tvTitulo)
+        var genero:TextView=v.findViewById(R.id.tvGenero)
+        var anio:TextView=v.findViewById(R.id.tvAnio)
+        var posicion:Int=-1
         init{
-            tvNumero=v.findViewById(R.id.tvNumero)
             v.setOnClickListener {
-                fragmento.findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+                val miBundle:Bundle= bundleOf("id" to this.posicion)
+                fragmento.findNavController().navigate(R.id.action_SecondFragment_to_detalleFragment, miBundle)
             }
         }
     }
@@ -26,10 +34,15 @@ class Adaptador(var fragmento:Fragment):RecyclerView.Adapter<Adaptador.ViewHolde
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.tvNumero.text=String.format("Este es el contenedor $position")
+        //val drawable: Drawable? = ResourcesCompat.getDrawable(resources, R.drawable.myimage, null)
+        holder.titulo.text=lista[position].titulo
+        holder.genero.text=lista[position].genero
+        holder.anio.text=lista[position].anio.toString()
+        holder.caratula.setImageResource(lista[position].caratula)
+        holder.posicion=position
     }
 
     override fun getItemCount(): Int {
-        return 30
+        return lista.size
     }
 }
