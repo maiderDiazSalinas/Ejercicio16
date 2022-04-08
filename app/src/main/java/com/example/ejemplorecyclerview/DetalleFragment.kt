@@ -1,21 +1,24 @@
 package com.example.ejemplorecyclerview
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.ejemplorecyclerview.databinding.FragmentDetalleBinding
-import com.example.ejemplorecyclerview.databinding.FragmentFirstBinding
-import com.example.ejemplorecyclerview.databinding.FragmentSecondBinding
 
 class DetalleFragment : Fragment() {
 
     private var _binding: FragmentDetalleBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var miPelicula:Pelicula
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,12 +33,20 @@ class DetalleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.d("FALLO EDITAR","Fragmento detalle")
+
         val id:Int=arguments?.getInt("id") ?:-1
 
         if(id!=-1){
-            binding.etTitulo.setText((activity as MainActivity).miViewModel.listaPeliculas[id].titulo)
-            binding.etGenero.setText((activity as MainActivity).miViewModel.listaPeliculas[id].genero)
-            binding.etAnio.setText((activity as MainActivity).miViewModel.listaPeliculas[id].anio.toString())
+            (activity as MainActivity).miViewModel.buscarPorId(id)
+            (activity as MainActivity).miViewModel.miPelicula.observe(activity as MainActivity, Observer {
+                it?.let {
+                    miPelicula = it
+                    binding.etTitulo.setText(miPelicula.titulo)
+                    binding.etGenero.setText(miPelicula.genero)
+                    binding.etAnio.setText(miPelicula.anio.toString())
+                }
+            })
             binding.bEditar.isVisible=true
             binding.bInsertar.isVisible=false
             binding.bBorrar.isVisible=true
@@ -47,39 +58,41 @@ class DetalleFragment : Fragment() {
         }
 
         binding.bEditar.setOnClickListener {
-            if(binding.etTitulo.text.isNotEmpty() &&
-                binding.etGenero.text.isNotEmpty() &&
-                binding.etAnio.text.isNotEmpty()) {
-                if (binding.etTitulo.text.toString() != (activity as MainActivity).miViewModel.listaPeliculas[id].titulo ||
-                    binding.etGenero.text.toString() != (activity as MainActivity).miViewModel.listaPeliculas[id].genero ||
-                    binding.etAnio.text.toString().toInt() != (activity as MainActivity).miViewModel.listaPeliculas[id].anio) {
-                    (activity as MainActivity).miViewModel.editarPelicula(
-                        id, Pelicula(
-                            binding.etTitulo.text.toString(),
-                            binding.etGenero.text.toString(),
-                            binding.etAnio.text.toString().toInt(),
-                            R.drawable.bootstrap_alineacion_ej_1
-                        )
-                    )
-                    Toast.makeText(activity,"Pelicula editada",Toast.LENGTH_LONG).show()
-                    findNavController().navigate(R.id.action_detalleFragment_to_SecondFragment)
+                if (binding.etTitulo.text.isNotEmpty() &&
+                    binding.etGenero.text.isNotEmpty() &&
+                    binding.etAnio.text.isNotEmpty()
+                ) {
+                    if (binding.etTitulo.text.toString() != miPelicula.titulo ||
+                        binding.etGenero.text.toString() != miPelicula.genero ||
+                        binding.etAnio.text.toString().toInt() != miPelicula.anio
+                    ) {
+                       /*miPelicula.titulo=binding.etTitulo.text.toString()
+                       miPelicula.genero=binding.etGenero.text.toString()
+                       miPelicula.anio= binding.etAnio.text.toString().toInt()*/
+                        (activity as MainActivity).miViewModel.editarPelicula(miPelicula)
+                        Toast.makeText(activity, "Pelicula editada", Toast.LENGTH_LONG).show()
+                        findNavController().navigate(R.id.action_detalleFragment_to_SecondFragment)
+                    }
+                    else Toast.makeText(activity,"No has cambiado ningún dato", Toast.LENGTH_LONG).show()
                 }
-            }
+            else Toast.makeText(activity, "Algún dato esta vacio", Toast.LENGTH_LONG).show()
         }
+
         binding.bBorrar.setOnClickListener {
-            (activity as MainActivity).miViewModel.borrarPelicula(id)
+            (activity as MainActivity).miViewModel.borrarPelicula(miPelicula)
             findNavController().navigate(R.id.action_detalleFragment_to_SecondFragment)
         }
+
         binding.bInsertar.setOnClickListener {
             if(binding.etTitulo.text.isNotEmpty() &&
                 binding.etGenero.text.isNotEmpty() &&
                 binding.etAnio.text.isNotEmpty()) {
                 (activity as MainActivity).miViewModel.insertarPelicula(
                     Pelicula(
-                        binding.etTitulo.text.toString(),
-                        binding.etGenero.text.toString(),
-                        binding.etAnio.text.toString().toInt(),
-                        R.drawable.bootstrap_alineacion_ej_1
+                        titulo=binding.etTitulo.text.toString(),
+                        genero=binding.etGenero.text.toString(),
+                        anio=binding.etAnio.text.toString().toInt(),
+                        caratula=R.drawable.bootstrap_alineacion_ej_1
                     )
                 )
                 Toast.makeText(activity,"Pelicula insertada",Toast.LENGTH_LONG).show()

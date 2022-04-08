@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -48,4 +49,21 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
+    // ext activity
+    implementation "androidx.activity:activity-ktx:1.4.0"
+//ext room
+    implementation "androidx.room:room-ktx:2.4.2"
+    kapt "androidx.room:room-compiler:2.4.2"
+    androidTestImplementation "androidx.room:room-testing:2.4.2"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+// ext lifecycle
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.4.1"
+// ext kotlin impl
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.20"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
+
 }

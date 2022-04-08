@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/FirstFragment"
         android:name="com.example.ejemplorecyclerview.FirstFragment"
-        android:label="@string/first_fragment_label"
+        android:label="Bienvenid@"
         tools:layout="@layout/fragment_first">
 
         <action
@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/SecondFragment"
         android:name="com.example.ejemplorecyclerview.SecondFragment"
-        android:label="@string/second_fragment_label"
+        android:label="Lista de Peliculas"
         tools:layout="@layout/fragment_second">
 
         <action
@@ -31,8 +31,8 @@
     <fragment
         android:id="@+id/detalleFragment"
         android:name="com.example.ejemplorecyclerview.DetalleFragment"
-        android:label="fragment_detalle"
-        tools:layout="@layout/fragment_detalle" >
+        android:label="Detalle pelicula"
+        tools:layout="@layout/fragment_detalle">
         <action
             android:id="@+id/action_detalleFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />

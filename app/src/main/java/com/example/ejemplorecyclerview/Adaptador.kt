@@ -6,13 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 
-class Adaptador(var fragmento:Fragment, var lista:MutableList<Pelicula>):RecyclerView.Adapter<Adaptador.ViewHolder>() {
+class Adaptador(var fragmento:Fragment, var lista:List<Pelicula>):RecyclerView.Adapter<Adaptador.ViewHolder>() {
 
     inner class ViewHolder(v: View):RecyclerView.ViewHolder(v){
         var caratula:ImageView=v.findViewById(R.id.ivCaratula)
@@ -39,7 +38,7 @@ class Adaptador(var fragmento:Fragment, var lista:MutableList<Pelicula>):Recycle
         holder.genero.text=lista[position].genero
         holder.anio.text=lista[position].anio.toString()
         holder.caratula.setImageResource(lista[position].caratula)
-        holder.posicion=position
+        holder.posicion=lista[position].id
     }
 
     override fun getItemCount(): Int {

@@ -1,6 +1,7 @@
 package com.example.ejemplorecyclerview
 
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -17,14 +18,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    val miViewModel:VM by viewModels()
+    val miBaseDatos by lazy {BaseDatos.getDataBase(this)}
+    val miRepositorio by lazy {Repositorio(miBaseDatos.miDao())}
+    val miViewModel:VM by viewModels {PeliculasViewModelFactory(miRepositorio)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         setSupportActionBar(binding.toolbar)
 
